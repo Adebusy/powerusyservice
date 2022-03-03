@@ -8,12 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var db *sql.DB
-var err error
+var Db *sql.DB
+var Err error
 
 func init() {
 	Database := &database.Database{}
-	db, err = Database.LoadDVInstance()
+	Db, Err = Database.LoadDVInstance()
 }
 
 func main() {
@@ -21,11 +21,10 @@ func main() {
 	svc := gin.Default()
 	svc.GET("/", CheckService)
 
-	svc.Run(":8055")
+	svc.Run(":8059")
 
 }
 
 func CheckService(ctx *gin.Context) {
-
 	ctx.JSON(http.StatusOK, "I am up and running") //fmt.Println("I am up and running now")
 }

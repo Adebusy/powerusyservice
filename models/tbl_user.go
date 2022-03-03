@@ -38,3 +38,8 @@ type UserOut struct {
 	Password    string `json:"Password" validate:"omitempty"`
 	AuthCode    string `json:"AuthCode" validate:"omitempty"`
 }
+
+type LoginIn struct {
+	Username string `json:"Username" validate:"omitempty"`
+	Password string `json:"Password" validate:"omitempty"`
+}
