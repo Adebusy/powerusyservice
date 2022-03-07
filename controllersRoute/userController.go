@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/Adebusy/powerusyservice/models"
+	util "github.com/Adebusy/powerusyservice/utilities"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/swaggo/swag/example/celler/httputil"
@@ -24,6 +26,8 @@ type IuserController interface {
 	CreateNewUser(ctx *gin.Context)
 	CheckService(ctx *gin.Context)
 	LoginUSer(ctx *gin.Context)
+	GetAllUser(ctx *gin.Context)
+	CheckEmailWithAuthCode(ctx *gin.Context)
 }
 
 func (ts userService) CheckService(ctx *gin.Context) {
@@ -32,7 +36,7 @@ func (ts userService) CheckService(ctx *gin.Context) {
 
 func (ts userService) CreateNewUser(ctx *gin.Context) {
 	userObj := &models.UserIn{}
-	respon := models.ResponseMessage{}
+	//respon := models.ResponseMessage{}
 	newusr := &models.Tbl_users{}
 
 	if err := ctx.ShouldBindJSON(userObj); err != nil {
@@ -41,7 +45,7 @@ func (ts userService) CreateNewUser(ctx *gin.Context) {
 		return
 	}
 
-	newusr.Authcode = "authcode"
+	newusr.Authcode = util.GenerateAuthCode()
 	newusr.Email = strings.ToUpper(userObj.Email)
 	newusr.Firstname = strings.ToUpper(userObj.FirstName)
 	newusr.Lastname = strings.ToUpper(userObj.LastName)
@@ -56,36 +60,34 @@ func (ts userService) CreateNewUser(ctx *gin.Context) {
 
 	retEmailDetail := ts.GetUserDetailsByEmail(newusr.Email)
 	if len(retEmailDetail.Email) != 0 {
-		respon.ResponseCode = 01
-		respon.ResponseMessage = "Email " + retEmailDetail.Email + "address already exists"
-		ctx.JSON(http.StatusOK, respon)
+		ResponBody.ResponseCode = "01"
+		ResponBody.ResponseMessage = "Email " + retEmailDetail.Email + "address already exists"
+		ctx.JSON(http.StatusOK, ResponBody)
 		return
 	}
 
 	retDetail := ts.GetUserDetailsByUsername(newusr.Username)
 	if len(retDetail.Firstname) != 0 {
-		respon.ResponseCode = 01
-		respon.ResponseMessage = "Username already exist"
-		ctx.JSON(http.StatusOK, respon)
+		ResponBody.ResponseCode = "01"
+		ResponBody.ResponseMessage = "Username already exist"
+		ctx.JSON(http.StatusOK, ResponBody)
 		return
 	}
 
 	inst := ts.DbGorm.Debug().Table("Tbl_users").Create(&newusr).Error
 	if inst != nil {
-		respon.ResponseCode = 01
-		respon.ResponseMessage = inst.Error()
-		ctx.JSON(http.StatusOK, respon)
+		ResponBody.ResponseCode = "01"
+		ResponBody.ResponseMessage = inst.Error()
+		ctx.JSON(http.StatusOK, ResponBody)
 		return
 	}
-	respon.ResponseCode = 00
-	respon.ResponseMessage = fmt.Sprintf("User %s creaated successfully", newusr.Username)
-	ctx.JSON(http.StatusOK, respon)
+	ResponBody.ResponseCode = "00"
+	ResponBody.ResponseMessage = fmt.Sprintf("User %s creaated successfully", newusr.Username)
+	ctx.JSON(http.StatusOK, ResponBody)
 	return
 }
 
 func (ts userService) GetUserDetailsByEmail(emailAddress string) models.Tbl_users {
-	fmt.Println("get here GetUserDetailsByEmail")
-	fmt.Println(emailAddress)
 	newusr := models.Tbl_users{}
 	ts.DbGorm.Table(`Tbl_users`).Where(`Email =?`, emailAddress).First(&newusr)
 	return newusr
@@ -104,6 +106,31 @@ func (ts userService) LoginUSer(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, err)
 		return
 	}
-	ts.DbGorm.Debug().Table(`Tbl_users`).Where(`username=? and password=?`, requestBody.Username, requestBody.Password).First(&responseBody)
+	ts.DbGorm.Table(`Tbl_users`).Where(`username=? and password=?`, requestBody.Username, requestBody.Password).First(&responseBody)
 	ctx.JSON(http.StatusOK, responseBody)
+}
+func (ts userService) GetAllUser(ctx *gin.Context) {
+	users := []models.UserOut{}
+	ts.DbGorm.Table(`Tbl_users`).Find(&users)
+	ctx.JSON(http.StatusOK, users)
+}
+
+var ResponBody = models.ResponseMessage{}
+
+func (ts userService) CheckEmailWithAuthCode(ctx *gin.Context) {
+	ret := ctx.Request.URL
+	fmt.Println(ret)
+	reponseUser := models.Tbl_users{}
+	email := ctx.Query("email")
+	authcode := ctx.Query("authcode")
+
+	if email == "" || authcode == "" {
+		ctx.JSON(http.StatusBadRequest, "Parameter Email and password is required")
+	}
+	ts.DbGorm.Debug().Table("Tbl_users").Where("authcode=? and email=?", authcode, strings.ToUpper(email)).Find(&reponseUser)
+	if reponseUser.Username != "" {
+		ResponBody.ResponseCode = "00"
+		ResponBody.ResponseMessage = "Authentication was successful"
+		ctx.JSON(http.StatusOK, ResponBody)
+	}
 }

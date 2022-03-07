@@ -17,5 +17,7 @@ func main() {
 	svc.GET("/", userRoute.CheckService)
 	svc.POST("/createUser", userRoute.CreateNewUser)
 	svc.POST("/Login", userRoute.LoginUSer)
+	svc.GET("/GetAllUser", userRoute.GetAllUser)
+	svc.GET("/CheckEmailWithAuthCode", userRoute.CheckEmailWithAuthCode)
 	svc.Run(":8060")
 }

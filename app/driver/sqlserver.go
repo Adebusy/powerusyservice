@@ -14,10 +14,8 @@ var ErrGorm error
 
 func init() {
 	godotenv.Load()
-	fmt.Println(utilities.GoDotEnvVariable("UserID"))
 	connectionString := fmt.Sprintf("sqlserver://%s:%s@localhost:1433?database=%s", utilities.GoDotEnvVariable("UserID"), utilities.GoDotEnvVariable("Password"), utilities.GoDotEnvVariable("Database"))
 	DbGorm, ErrGorm = gorm.Open("mssql", connectionString)
-	//DbGorm, ErrGorm = gorm.Open("mssql", connectionString), &gorm.Config{Logger: Logger.Default.LogMode(Logger.Info),}
 	if ErrGorm != nil {
 		fmt.Printf(ErrGorm.Error())
 		return
