@@ -13,6 +13,7 @@ var ErrGorm error
 var userRoute = controllersroute.NewIuserController(driver.GetDB())
 
 func main() {
+	driver.CreateLog()
 	svc := gin.Default()
 	svc.GET("/", userRoute.CheckService)
 	svc.POST("/createUser", userRoute.CreateNewUser)

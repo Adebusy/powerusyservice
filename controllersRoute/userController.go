@@ -2,6 +2,7 @@ package controllersroute
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -36,7 +37,6 @@ func (ts userService) CheckService(ctx *gin.Context) {
 
 func (ts userService) CreateNewUser(ctx *gin.Context) {
 	userObj := &models.UserIn{}
-	//respon := models.ResponseMessage{}
 	newusr := &models.Tbl_users{}
 
 	if err := ctx.ShouldBindJSON(userObj); err != nil {
@@ -74,7 +74,7 @@ func (ts userService) CreateNewUser(ctx *gin.Context) {
 		return
 	}
 
-	inst := ts.DbGorm.Debug().Table("Tbl_users").Create(&newusr).Error
+	inst := ts.DbGorm.Table("Tbl_users").Create(&newusr).Error
 	if inst != nil {
 		ResponBody.ResponseCode = "01"
 		ResponBody.ResponseMessage = inst.Error()
@@ -89,7 +89,11 @@ func (ts userService) CreateNewUser(ctx *gin.Context) {
 
 func (ts userService) GetUserDetailsByEmail(emailAddress string) models.Tbl_users {
 	newusr := models.Tbl_users{}
-	ts.DbGorm.Table(`Tbl_users`).Where(`Email =?`, emailAddress).First(&newusr)
+	retQuery := ts.DbGorm.Table(`Tbl_users`).Where(`Email =?`, emailAddress).First(&newusr).Error
+	if retQuery.Error() != "" {
+		log.Fatal(retQuery.Error())
+	}
+
 	return newusr
 }
 
@@ -127,7 +131,7 @@ func (ts userService) CheckEmailWithAuthCode(ctx *gin.Context) {
 	if email == "" || authcode == "" {
 		ctx.JSON(http.StatusBadRequest, "Parameter Email and password is required")
 	}
-	ts.DbGorm.Debug().Table("Tbl_users").Where("authcode=? and email=?", authcode, strings.ToUpper(email)).Find(&reponseUser)
+	ts.DbGorm.Table("Tbl_users").Where("authcode=? and email=?", authcode, strings.ToUpper(email)).Find(&reponseUser)
 	if reponseUser.Username != "" {
 		ResponBody.ResponseCode = "00"
 		ResponBody.ResponseMessage = "Authentication was successful"

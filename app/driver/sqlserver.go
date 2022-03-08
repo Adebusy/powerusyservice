@@ -2,6 +2,8 @@ package driver
 
 import (
 	"fmt"
+	"os"
+	"time"
 
 	"github.com/Adebusy/powerusyservice/utilities"
 	"github.com/jinzhu/gorm"
@@ -24,4 +26,16 @@ func init() {
 
 func GetDB() *gorm.DB {
 	return DbGorm
+}
+
+func CreateLog() {
+	dt := time.Now()
+	filename := "log-" + dt.Format("01-02-2006") + ".txt"
+	_, Ferr := os.Stat(filename)
+	if os.IsNotExist(Ferr) {
+		_, err := os.Create(filename)
+		if err.Error() != "" {
+			fmt.Println("Unable to create logfile for today" + filename)
+		}
+	}
 }
