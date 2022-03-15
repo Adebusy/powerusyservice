@@ -1,0 +1,319 @@
+basePath: /
+definitions:
+  models.CompanyDocumentIn:
+    properties:
+      accountNumber:
+        type: string
+      bankName:
+        type: string
+      companyAddress:
+        type: string
+      companyLocation:
+        type: string
+      companyLogo:
+        type: string
+      companyName:
+        type: string
+      description:
+        type: string
+      email:
+        type: string
+      postAddress:
+        type: string
+      serviceId:
+        type: integer
+      userId:
+        type: integer
+      workingDays:
+        type: string
+      workingHours:
+        type: string
+    type: object
+  models.CompanyDocumentOut:
+    properties:
+      AccountNumber:
+        type: string
+      Approvalcomment:
+        type: string
+      ApprovedBy:
+        type: integer
+      BankName:
+        type: string
+      CompanyAddress:
+        type: string
+      CompanyLocation:
+        type: string
+      CompanyLogo:
+        type: string
+      CompanyName:
+        type: string
+      Dateadded:
+        type: string
+      Dateapproved:
+        type: string
+      Description:
+        type: string
+      PostAddress:
+        type: string
+      ServiceId:
+        type: integer
+      StatusId:
+        type: integer
+      UserId:
+        type: integer
+      WorkingDays:
+        type: string
+      WorkingHours:
+        type: string
+    type: object
+  models.LoginIn:
+    properties:
+      Password:
+        type: string
+      Username:
+        type: string
+    type: object
+  models.ResponseMessage:
+    properties:
+      responseCode:
+        type: string
+      responseMessage:
+        type: string
+    type: object
+  models.Tbl_users:
+    properties:
+      authcode:
+        type: string
+      dateAdded:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      id:
+        type: integer
+      lastname:
+        type: string
+      middlename:
+        type: string
+      password:
+        type: string
+      phonenumber:
+        type: string
+      roleid:
+        type: integer
+      status:
+        type: boolean
+      username:
+        type: string
+    type: object
+  models.UserIn:
+    properties:
+      Email:
+        type: string
+      Firstname:
+        type: string
+      Lastname:
+        type: string
+      Middlename:
+        type: string
+      Password:
+        type: string
+      Phonenumber:
+        type: string
+      Username:
+        type: string
+    type: object
+  models.UserOut:
+    properties:
+      Accountnumber:
+        type: string
+      Approvedby:
+        type: string
+      Dateapproved:
+        type: string
+      Statusid:
+        type: string
+      authcode:
+        type: string
+      dateadded:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      id:
+        type: integer
+      lastname:
+        type: string
+      middlename:
+        type: string
+      password:
+        type: string
+      phonenumber:
+        type: string
+      roleid:
+        type: integer
+      status:
+        type: boolean
+      username:
+        type: string
+    type: object
+host: localhost:8060
+info:
+  contact:
+    email: alao.adebusy@gmail.com, nabbo247@yahoo.com
+    name: Alao Ramon, Nabil Abubakar
+    url: http://www.swagger.io/support
+  description: This is a backend web service created for Powerusy operations.
+  license:
+    name: AddyTech Solution Ltd
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Powerusy backend service
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - '*/*'
+      description: Gets the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Shows the new status of server.
+      tags:
+      - root
+  /api/company/GetComplaintByRefID/{Email}/{CompanyName}:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CompanyDocumentOut'
+      summary: Gets company details by email address and company name.
+      tags:
+      - company
+  /api/company/RegisterCompany/:
+    post:
+      parameters:
+      - description: Company details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.CompanyDocumentIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Register new company
+      tags:
+      - company
+  /api/users/CheckEmailWithAuthCode/{email}/{authcode}:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: validates email with authentication code
+      tags:
+      - user
+  /api/users/CreateNewUser/:
+    post:
+      parameters:
+      - description: User Details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UserOut'
+      summary: Creates new user
+      tags:
+      - user
+  /api/users/GetAllUsers:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.UserOut'
+            type: array
+      summary: gets list of all users
+      tags:
+      - user
+  /api/users/GetUserDetailsByEmail/{email}:
+    get:
+      consumes:
+      - '*/*'
+      description: gets user details by email address.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Tbl_users'
+      summary: gets user details by email address.
+      tags:
+      - user
+  /api/users/GetUserDetailsByUsername/{username}:
+    get:
+      consumes:
+      - '*/*'
+      description: Gets user details by username.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Tbl_users'
+      summary: Gets user details by username.
+      tags:
+      - user
+  /api/users/Login/:
+    post:
+      parameters:
+      - description: Login user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UserOut'
+      summary: log user into the syste
+      tags:
+      - user
+schemes:
+- http
+swagger: "2.0"

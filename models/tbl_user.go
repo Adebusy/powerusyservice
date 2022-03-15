@@ -58,18 +58,22 @@ type UserIn struct {
 }
 
 type UserOut struct {
-	Id          int       `json:"id" validate:"omitempty"`
-	Firstname   string    `json:"firstname" validate:"omitempty"`
-	Username    string    `json:"username" validate:"omitempty"`
-	Lastname    string    `json:"lastname" validate:"omitempty"`
-	Middlename  string    `json:"middlename" validate:"omitempty"`
-	Phonenumber string    `json:"phonenumber" validate:"omitempty"`
-	Dateadded   time.Time `json:"dateAdded" validate:"omitempty"`
-	Roleid      int       `json:"roleid" validate:"omitempty"`
-	Status      bool      `json:"status" validate:"omitempty"`
-	Email       string    `json:"email" validate:"omitempty"`
-	Password    string    `json:"password" validate:"omitempty"`
-	Authcode    string    `json:"authcode" validate:"omitempty"`
+	Id            int       `json:"id" validate:"omitempty"`
+	Firstname     string    `json:"firstname" validate:"omitempty"`
+	Username      string    `json:"username" validate:"omitempty"`
+	Lastname      string    `json:"lastname" validate:"omitempty"`
+	Middlename    string    `json:"middlename" validate:"omitempty"`
+	Phonenumber   string    `json:"phonenumber" validate:"omitempty"`
+	Dateadded     time.Time `json:"dateadded" validate:"omitempty"`
+	Roleid        int       `json:"roleid" validate:"omitempty"`
+	Status        bool      `json:"status" validate:"omitempty"`
+	Email         string    `json:"email" validate:"omitempty"`
+	Password      string    `json:"password" validate:"omitempty"`
+	Authcode      string    `json:"authcode" validate:"omitempty"`
+	Accountnumber string    `json:"Accountnumber" validate:"omitempty"`
+	Statusid      string    `json:"Statusid" validate:"omitempty"`
+	Approvedby    string    `json:"Approvedby" validate:"omitempty"`
+	Dateapproved  string    `json:"Dateapproved" validate:"omitempty"`
 }
 
 type LoginIn struct {

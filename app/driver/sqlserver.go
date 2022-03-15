@@ -2,8 +2,6 @@ package driver
 
 import (
 	"fmt"
-	"os"
-	"time"
 
 	"github.com/Adebusy/powerusyservice/utilities"
 	"github.com/jinzhu/gorm"
@@ -28,14 +26,22 @@ func GetDB() *gorm.DB {
 	return DbGorm
 }
 
-func CreateLog() {
-	dt := time.Now()
-	filename := "log-" + dt.Format("01-02-2006") + ".txt"
-	_, Ferr := os.Stat(filename)
-	if os.IsNotExist(Ferr) {
-		_, err := os.Create(filename)
-		if err.Error() != "" {
-			fmt.Println("Unable to create logfile for today" + filename)
-		}
-	}
-}
+// func CreateLog() {
+// 	dt := time.Now()
+// 	filename := "log-" + dt.Format("01-02-2006") + ".txt"
+// 	_, Ferr := os.Stat(filename)
+// 	if os.IsNotExist(Ferr) {
+// 		ret, err := os.Create(filename)
+// 		if err.Error() != "" {
+// 			fmt.Println("Unable to create logfile for today" + filename)
+// 		}
+// 		fmt.Println(ret)
+// 		defer ret.Close()
+// 		log.SetOutput(ret)
+// 	}
+// }
+
+// func LogError(err error) {
+// 	errLog := &log.Logger{}
+// 	errLog.Println(err)
+// }

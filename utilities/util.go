@@ -2,12 +2,17 @@ package utilities
 
 import (
 	"crypto/rand"
+	"fmt"
 	"io"
 	"log"
 	"os"
 	"strconv"
+	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+
+	pb "google.golang.org/appengine/v2/mail"
 )
 
 func GoDotEnvVariable(key string) string {
@@ -35,4 +40,39 @@ func GenerateAuthCode() string {
 		b[i] = table[int(b[i])%len(table)]
 	}
 	return string(b)
+}
+
+func CreateLog() {
+	dt := time.Now()
+	filename := "log-" + dt.Format("01-02-2006") + ".txt"
+	_, Ferr := os.Stat(filename)
+	if os.IsNotExist(Ferr) {
+		ret, err := os.Create(filename)
+		if err != nil {
+			fmt.Println("Unable to create logfile for today" + filename)
+		}
+		fmt.Println(ret)
+		defer ret.Close()
+		log.SetOutput(ret)
+	}
+}
+
+func LogError(err error) {
+	errLog := &log.Logger{}
+	errLog.Println(err)
+}
+
+func SendEmail(c *gin.Context, toAddress []string, authcode string) bool {
+	msg := &pb.Message{
+		Sender:  "noreply@powerusy.com",
+		To:      toAddress,
+		Subject: "Powerusy authentication code",
+		Body:    "Kindly complete your registration with code " + authcode,
+	}
+	if err := pb.Send(c, msg); err != nil {
+		fmt.Println(err)
+		return false
+		//log.Errorf(c, "Alas, my user, the email failed to sendeth: %v", err)
+	}
+	return true
 }
