@@ -68,7 +68,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/company/RegisterCompany/": {
+        "/api/company/RegisterCompany": {
             "post": {
                 "produces": [
                     "application/json"
@@ -117,7 +117,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/users/CreateNewUser/": {
+        "/api/users/CreateNewUser": {
             "post": {
                 "produces": [
                     "application/json"
@@ -215,7 +215,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/users/Login/": {
+        "/api/users/Login": {
             "post": {
                 "produces": [
                     "application/json"

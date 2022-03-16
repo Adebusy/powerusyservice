@@ -41,13 +41,13 @@ func main() {
 	svc.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
 	svc.GET("/", userRoute.CheckService)
-	svc.POST("/createUser", userRoute.CreateNewUser)
-	svc.POST("/Login", userRoute.Login)
-	svc.GET("/GetAllUsers", userRoute.GetAllUsers)
-	svc.GET("/GetUserDetailsByEmail/:email", userRoute.GetUserDetailsByEmail)
+	svc.POST("/api/users/createUser", userRoute.CreateNewUser)
+	svc.POST("/api/users/Login", userRoute.Login)
+	svc.GET("/api/users/GetAllUsers", userRoute.GetAllUsers)
+	svc.GET("/api/users/GetUserDetailsByEmail/:email", userRoute.GetUserDetailsByEmail)
 
-	svc.GET("/CheckEmailWithAuthCode/:email/:authcode", userRoute.CheckEmailWithAuthCode)
-	svc.POST("/CompanyRegistration", userRoute.RegisterCompany)
-	svc.GET("/GetCompanyDetail/:Email/:CompanyName", userRoute.GetCompanyDetail)
+	svc.GET("/api/company/CheckEmailWithAuthCode/:email/:authcode", userRoute.CheckEmailWithAuthCode)
+	svc.POST("/api/company/CompanyRegistration", userRoute.RegisterCompany)
+	svc.GET("/api/company/GetCompanyDetail/:Email/:CompanyName", userRoute.GetCompanyDetail)
 	svc.Run(":8060")
 }

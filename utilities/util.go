@@ -5,17 +5,19 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-
-	pb "google.golang.org/appengine/v2/mail"
 )
 
 func GoDotEnvVariable(key string) string {
+
+	//"google.golang.org/appengine"
+	//pb "google.golang.org/appengine/v2/mail"
 
 	// load .env file
 	err := godotenv.Load(".env")
@@ -62,17 +64,18 @@ func LogError(err error) {
 	errLog.Println(err)
 }
 
-func SendEmail(c *gin.Context, toAddress []string, authcode string) bool {
-	msg := &pb.Message{
-		Sender:  "noreply@powerusy.com",
-		To:      toAddress,
-		Subject: "Powerusy authentication code",
-		Body:    "Kindly complete your registration with code " + authcode,
-	}
-	if err := pb.Send(c, msg); err != nil {
-		fmt.Println(err)
-		return false
-		//log.Errorf(c, "Alas, my user, the email failed to sendeth: %v", err)
-	}
+func SendEmail(c *gin.Context, toAddress []string, authcode string, r *http.Request) bool {
+	// ctx := appengine.NewContext(r)
+	// msg := &pb.Message{
+	// 	Sender:  "noreply@powerusy.com",
+	// 	To:      toAddress,
+	// 	Subject: "Powerusy authentication code",
+	// 	Body:    "Kindly complete your registration with code " + authcode,
+	// }
+	// if err := pb.Send(ctx, msg); err != nil {
+	// 	fmt.Println(err)
+	// 	return false
+	// 	//log.Errorf(c, "Alas, my user, the email failed to sendeth: %v", err)
+	// }
 	return true
 }

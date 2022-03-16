@@ -201,7 +201,7 @@ paths:
       summary: Gets company details by email address and company name.
       tags:
       - company
-  /api/company/RegisterCompany/:
+  /api/company/RegisterCompany:
     post:
       parameters:
       - description: Company details
@@ -232,7 +232,7 @@ paths:
       summary: validates email with authentication code
       tags:
       - user
-  /api/users/CreateNewUser/:
+  /api/users/CreateNewUser:
     post:
       parameters:
       - description: User Details
@@ -295,7 +295,7 @@ paths:
       summary: Gets user details by username.
       tags:
       - user
-  /api/users/Login/:
+  /api/users/Login:
     post:
       parameters:
       - description: Login user

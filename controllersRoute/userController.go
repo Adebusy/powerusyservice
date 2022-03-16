@@ -33,7 +33,7 @@ func (ts userService) CheckService(ctx *gin.Context) {
 // @Tags user
 // @Param user body models.UserIn true "User Details"
 // @Success 200 {object} models.UserOut
-// @Router /api/users/CreateNewUser/ [post]
+// @Router /api/users/CreateNewUser [post]
 func (ts userService) CreateNewUser(ctx *gin.Context) {
 	userObj := &models.UserIn{}
 	newusr := &models.Tbl_users{}
@@ -64,23 +64,23 @@ func (ts userService) CreateNewUser(ctx *gin.Context) {
 		return
 	}
 
-	retEmailDetail := newuserService.GetUserByEmail(newusr.Email)
-	if len(retEmailDetail.Email) != 0 {
+	retEmailDetail, _ := newuserService.GetUserByEmail(newusr.Email)
+	if retEmailDetail.Id != 0 {
 		ResponBody.ResponseCode = "01"
-		ResponBody.ResponseMessage = "Email " + retEmailDetail.Email + "address already exists"
+		ResponBody.ResponseMessage = "Email " + newusr.Email + "address already exists"
 		ctx.JSON(http.StatusOK, ResponBody)
 		return
 	}
 
 	retDetail := newuserService.GetUserDetailsByUsername(newusr.Username)
-	if len(retDetail.Firstname) != 0 {
+	if retDetail.Id != 0 {
 		ResponBody.ResponseCode = "01"
 		ResponBody.ResponseMessage = "Username already exist"
 		ctx.JSON(http.StatusOK, ResponBody)
 		return
 	}
 
-	createNewUser := newuserService.CreateNewUser(newusr)
+	createNewUser := newuserService.CreateUser(newusr)
 	if createNewUser != nil {
 		ResponBody.ResponseCode = "01"
 		ResponBody.ResponseMessage = createNewUser.Error()
@@ -90,7 +90,7 @@ func (ts userService) CreateNewUser(ctx *gin.Context) {
 	var useEmail []string
 	useEmail = append(useEmail, newusr.Email)
 	// send auth code to user
-	sendAuth := util.SendEmail(ctx, useEmail, newusr.Authcode)
+	sendAuth := util.SendEmail(ctx, useEmail, newusr.Authcode, ctx.Request)
 	if sendAuth {
 		ResponBody.ResponseCode = "00"
 		ResponBody.ResponseMessage = fmt.Sprintf("User %s creaated successfully, authcode has been sent to the user email address", newusr.Username)
@@ -127,7 +127,7 @@ func (ts userService) GetUserDetailsByEmail(ctx *gin.Context) {
 		return
 	}
 
-	retQuery := newuserService.GetUserByEmail(strings.ToUpper(email))
+	retQuery, _ := newuserService.GetUserByEmail(strings.ToUpper(email))
 	// if retQuery.Error() != "" {
 	// 	util.LogError(retQuery)
 	// 	log.Fatal(retQuery.Error())
@@ -159,7 +159,7 @@ func GetUserDetailsByUsername(ctx *gin.Context) models.Tbl_users {
 // @Tags user
 // @Param user body models.LoginIn true "Login user"
 // @Success 200 {object} models.UserOut
-// @Router /api/users/Login/ [post]
+// @Router /api/users/Login [post]
 func (ts userService) Login(ctx *gin.Context) {
 	//func (ts userService) LoginUSer(ctx *gin.Context) {
 	requestBody := models.LoginIn{}

@@ -64,7 +64,7 @@
                 }
             }
         },
-        "/api/company/RegisterCompany/": {
+        "/api/company/RegisterCompany": {
             "post": {
                 "produces": [
                     "application/json"
@@ -113,7 +113,7 @@
                 }
             }
         },
-        "/api/users/CreateNewUser/": {
+        "/api/users/CreateNewUser": {
             "post": {
                 "produces": [
                     "application/json"
@@ -211,7 +211,7 @@
                 }
             }
         },
-        "/api/users/Login/": {
+        "/api/users/Login": {
             "post": {
                 "produces": [
                     "application/json"

@@ -14,20 +14,25 @@ func NewUser(db *gorm.DB) IUserService {
 
 type IUserService interface {
 	GetUserByEmailandUserId(email string, userId int) (models.Tbl_users, error)
-	GetUserByEmail(email string) models.Tbl_users
+	GetUserByEmail(email string) (models.Tbl_users, error)
 	GetUserDetailsByUsername(username string) models.Tbl_users
-	CreateNewUser(newusr *models.Tbl_users) error
+	CreateUser(newusr *models.Tbl_users) error
 	GetUserDetailsByUsernameAndPassword(username, password string) models.UserOut
 	GetAllUsers() []models.UserOut
 	CheckEmailWithAuthCode(email, authcode string) models.Tbl_users
 }
 
-func (db dbconnect) GetUserByEmail(email string) models.Tbl_users {
+func newresearch(rec ...int) int {
+
+	return 1
+}
+func (db dbconnect) GetUserByEmail(email string) (models.Tbl_users, error) {
 	user := models.Tbl_users{}
-	if retQuery := db.DbGorm.Table(`Tbl_users`).Where(`Email =?`, email).First(&user).Error; retQuery != nil {
-		fmt.Println(retQuery)
+	retQuery := db.DbGorm.Debug().Table(`Tbl_users`).Where(`Email =?`, email).First(&user).Error
+	if retQuery != nil {
+		fmt.Println(retQuery.Error())
 	}
-	return user
+	return user, retQuery
 }
 
 func (db dbconnect) GetUserByEmailandUserId(email string, userId int) (models.Tbl_users, error) {
@@ -41,16 +46,19 @@ func (db dbconnect) GetUserByEmailandUserId(email string, userId int) (models.Tb
 
 func (ts dbconnect) GetUserDetailsByUsername(username string) models.Tbl_users {
 	reponseUser := models.Tbl_users{}
-	retQuery := ts.DbGorm.Table(`Tbl_users`).Where(`username =?`, username).First(&reponseUser).Error
-	if retQuery.Error() != "" {
+	retQuery := ts.DbGorm.Debug().Table(`Tbl_users`).Where(`username =?`, username).First(&reponseUser).Error
+	if retQuery != nil {
+		if retQuery.Error() == "record not found" {
+			return reponseUser
+		}
 		log.Fatal(retQuery.Error())
 	}
 	return reponseUser
 }
 
-func (ts dbconnect) CreateNewUser(newusr *models.Tbl_users) error {
-	retQuery := ts.DbGorm.Table("Tbl_users").Create(&newusr).Error
-	if retQuery.Error() != "" {
+func (ts dbconnect) CreateUser(newusr *models.Tbl_users) error {
+	retQuery := ts.DbGorm.Debug().Table("Tbl_users").Create(&newusr).Error
+	if retQuery != nil {
 		log.Fatal(retQuery.Error())
 	}
 	return retQuery
@@ -58,9 +66,8 @@ func (ts dbconnect) CreateNewUser(newusr *models.Tbl_users) error {
 
 func (ts dbconnect) GetUserDetailsByUsernameAndPassword(username, password string) models.UserOut {
 	reponseUser := models.UserOut{}
-	retQuery := ts.DbGorm.Table(`Tbl_users`).Where(`username=? and password=?`, username, password).First(&reponseUser).Error
-	//retQuery := ts.DbGorm.Table(`Tbl_users`).Where(`username =?`, username).First(&reponseUser).Error
-	if retQuery.Error() != "" {
+	retQuery := ts.DbGorm.Debug().Table(`Tbl_users`).Where(`username=? and password=?`, username, password).First(&reponseUser).Error
+	if retQuery != nil {
 		log.Fatal(retQuery.Error())
 	}
 	return reponseUser
@@ -68,10 +75,8 @@ func (ts dbconnect) GetUserDetailsByUsernameAndPassword(username, password strin
 
 func (ts dbconnect) GetAllUsers() []models.UserOut {
 	users := []models.UserOut{}
-	retQuery := ts.DbGorm.Debug().Table(`Tbl_users`).Find(&users).Error
+	retQuery := ts.DbGorm.Table(`Tbl_users`).Find(&users).Error
 	if retQuery != nil {
-		fmt.Println(retQuery)
-		//util.LogError(retQuery)
 		log.Fatal(retQuery.Error())
 	}
 	return users

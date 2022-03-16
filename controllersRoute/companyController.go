@@ -43,7 +43,7 @@ type IuserController interface {
 // @Tags company
 // @Param user body models.CompanyDocumentIn true "Company details"
 // @Success 200 {object} models.ResponseMessage
-// @Router /api/company/RegisterCompany/ [post]
+// @Router /api/company/RegisterCompany [post]
 func (ts userService) RegisterCompany(ctx *gin.Context) {
 	requestBody := models.CompanyDocumentIn{}
 	//CompanyDocumentOut := models.CompanyDocumentOut{}
