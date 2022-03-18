@@ -1,35 +1,39 @@
 basePath: /
 definitions:
-  models.CompanyDocumentIn:
+  models.CompanyDetailsIn:
     properties:
-      accountNumber:
+      AccountNumber:
         type: string
-      bankName:
+      Approvalcomment:
         type: string
-      companyAddress:
+      BankName:
         type: string
-      companyLocation:
+      CompanyAddress:
         type: string
-      companyLogo:
+      CompanyLocation:
         type: string
-      companyName:
+      CompanyLogo:
         type: string
-      description:
+      CompanyName:
         type: string
-      email:
+      Description:
         type: string
-      postAddress:
+      Email:
         type: string
-      serviceId:
+      PostAddress:
+        type: string
+      ServiceId:
         type: integer
-      userId:
+      StatusId:
         type: integer
-      workingDays:
+      UserId:
+        type: integer
+      WorkingDays:
         type: string
-      workingHours:
+      WorkingHours:
         type: string
     type: object
-  models.CompanyDocumentOut:
+  models.CompanyDetailsOut:
     properties:
       AccountNumber:
         type: string
@@ -64,6 +68,17 @@ definitions:
       WorkingDays:
         type: string
       WorkingHours:
+        type: string
+      id:
+        type: integer
+    type: object
+  models.ImportationDocumentIn:
+    properties:
+      DocumentName:
+        type: string
+      DocumentPath:
+        type: string
+      ImportationId:
         type: string
     type: object
   models.LoginIn:
@@ -189,19 +204,7 @@ paths:
       summary: Shows the new status of server.
       tags:
       - root
-  /api/company/GetComplaintByRefID/{Email}/{CompanyName}:
-    get:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.CompanyDocumentOut'
-      summary: Gets company details by email address and company name.
-      tags:
-      - company
-  /api/company/RegisterCompany:
+  /api/company/CompanyRegistration:
     post:
       parameters:
       - description: Company details
@@ -209,7 +212,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.CompanyDocumentIn'
+          $ref: '#/definitions/models.CompanyDetailsIn'
       produces:
       - application/json
       responses:
@@ -218,6 +221,49 @@ paths:
           schema:
             $ref: '#/definitions/models.ResponseMessage'
       summary: Register new company
+      tags:
+      - company
+  /api/company/GetComplaintByRefID/{Email}/{CompanyName}:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CompanyDetailsOut'
+      summary: Gets company details bycompany name.
+      tags:
+      - company
+  /api/company/GetComplaintByRefID/{email}/{companyname}:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CompanyDetailsOut'
+      summary: Gets company details by email address and company name.
+      tags:
+      - company
+  /api/company/UploadCompanyDocuments:
+    post:
+      parameters:
+      - description: Upload company document
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.ImportationDocumentIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Upload company document
       tags:
       - company
   /api/users/CheckEmailWithAuthCode/{email}/{authcode}:

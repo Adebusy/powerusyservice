@@ -40,14 +40,16 @@ func main() {
 
 	svc.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
-	svc.GET("/", userRoute.CheckService)
-	svc.POST("/api/users/createUser", userRoute.CreateNewUser)
-	svc.POST("/api/users/Login", userRoute.Login)
-	svc.GET("/api/users/GetAllUsers", userRoute.GetAllUsers)
-	svc.GET("/api/users/GetUserDetailsByEmail/:email", userRoute.GetUserDetailsByEmail)
+	svc.GET("/", userRoute.CheckService)                                                            //done
+	svc.POST("/api/users/createUser", userRoute.CreateNewUser)                                      //done
+	svc.POST("/api/users/Login", userRoute.Login)                                                   //done
+	svc.GET("/api/users/GetAllUsers", userRoute.GetAllUsers)                                        //done
+	svc.GET("/api/users/GetUserDetailsByEmail/:email", userRoute.GetUserDetailsByEmail)             //done
+	svc.GET("/api/users/CheckEmailWithAuthCode/:email/:authcode", userRoute.CheckEmailWithAuthCode) //done
 
-	svc.GET("/api/company/CheckEmailWithAuthCode/:email/:authcode", userRoute.CheckEmailWithAuthCode)
-	svc.POST("/api/company/CompanyRegistration", userRoute.RegisterCompany)
-	svc.GET("/api/company/GetCompanyDetail/:Email/:CompanyName", userRoute.GetCompanyDetail)
+	svc.POST("/api/company/CompanyRegistration", userRoute.RegisterCompany)                         //done
+	svc.GET("/api/company/GetCompanyDetail/:email/:companyname", userRoute.GetCompanyDetail)        //done
+	svc.POST("/api/company/UploadCompanyDocuments", userRoute.UploadCompanyDocuments)               //done
+	svc.GET("/api/company/GetCompanyByCompanyName/:companyname", userRoute.GetCompanyByCompanyName) //done
 	svc.Run(":8060")
 }

@@ -16,6 +16,18 @@ func init() {
 	godotenv.Load()
 	connectionString := fmt.Sprintf("sqlserver://%s:%s@localhost:1433?database=%s", utilities.GoDotEnvVariable("UserID"), utilities.GoDotEnvVariable("Password"), utilities.GoDotEnvVariable("Database"))
 	DbGorm, ErrGorm = gorm.Open("mssql", connectionString)
+	//DbGorm.Debug().DropTableIfExists()
+	//DbGorm.Debug().DropTableIfExists(&models.Tbl_users{})
+	//DbGorm.Debug().DropTableIfExists(&models.Tbl_Registered{})
+	//DbGorm.Debug().DropTableIfExists(&models.Tbl_ImportationDocument{})
+	DbGorm.SingularTable(true)
+	//DbGorm.Debug().AutoMigrate(&models.Tbl_users{})
+	//DbGorm.Debug().AutoMigrate(&models.Tbl_Registered{})
+	//DbGorm.Debug().AutoMigrate(&models.Tbl_ImportationDocument{})
+	//DbGorm.Debug().AutoMigrate(&models.Tbl_KYC{})
+	//DbGorm.Debug().AutoMigrate(&models.Tbl_role{})
+	//DbGorm.Debug().AutoMigrate(&models.Tbl_status{})
+
 	if ErrGorm != nil {
 		fmt.Printf(ErrGorm.Error())
 		return

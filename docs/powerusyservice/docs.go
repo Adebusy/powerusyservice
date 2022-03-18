@@ -49,26 +49,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/company/GetComplaintByRefID/{Email}/{CompanyName}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "company"
-                ],
-                "summary": "Gets company details by email address and company name.",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.CompanyDocumentOut"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/company/RegisterCompany": {
+        "/api/company/CompanyRegistration": {
             "post": {
                 "produces": [
                     "application/json"
@@ -84,7 +65,75 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.CompanyDocumentIn"
+                            "$ref": "#/definitions/models.CompanyDetailsIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/company/GetComplaintByRefID/{Email}/{CompanyName}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company"
+                ],
+                "summary": "Gets company details bycompany name.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.CompanyDetailsOut"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/company/GetComplaintByRefID/{email}/{companyname}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company"
+                ],
+                "summary": "Gets company details by email address and company name.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.CompanyDetailsOut"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/company/UploadCompanyDocuments": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company"
+                ],
+                "summary": "Upload company document",
+                "parameters": [
+                    {
+                        "description": "Upload company document",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ImportationDocumentIn"
                         }
                     }
                 ],
@@ -247,51 +296,57 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.CompanyDocumentIn": {
+        "models.CompanyDetailsIn": {
             "type": "object",
             "properties": {
-                "accountNumber": {
+                "AccountNumber": {
                     "type": "string"
                 },
-                "bankName": {
+                "Approvalcomment": {
                     "type": "string"
                 },
-                "companyAddress": {
+                "BankName": {
                     "type": "string"
                 },
-                "companyLocation": {
+                "CompanyAddress": {
                     "type": "string"
                 },
-                "companyLogo": {
+                "CompanyLocation": {
                     "type": "string"
                 },
-                "companyName": {
+                "CompanyLogo": {
                     "type": "string"
                 },
-                "description": {
+                "CompanyName": {
                     "type": "string"
                 },
-                "email": {
+                "Description": {
                     "type": "string"
                 },
-                "postAddress": {
+                "Email": {
                     "type": "string"
                 },
-                "serviceId": {
+                "PostAddress": {
+                    "type": "string"
+                },
+                "ServiceId": {
                     "type": "integer"
                 },
-                "userId": {
+                "StatusId": {
                     "type": "integer"
                 },
-                "workingDays": {
+                "UserId": {
+                    "type": "integer"
+                },
+                "WorkingDays": {
                     "type": "string"
                 },
-                "workingHours": {
+                "WorkingHours": {
                     "type": "string"
                 }
             }
         },
-        "models.CompanyDocumentOut": {
+        "models.CompanyDetailsOut": {
             "type": "object",
             "properties": {
                 "AccountNumber": {
@@ -343,6 +398,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "WorkingHours": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.ImportationDocumentIn": {
+            "type": "object",
+            "properties": {
+                "DocumentName": {
+                    "type": "string"
+                },
+                "DocumentPath": {
+                    "type": "string"
+                },
+                "ImportationId": {
                     "type": "string"
                 }
             }

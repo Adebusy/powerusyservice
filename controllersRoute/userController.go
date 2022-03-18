@@ -2,7 +2,6 @@ package controllersroute
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -111,7 +110,7 @@ func (ts userService) CreateNewUser(ctx *gin.Context) {
 // @Success 200 {object} models.Tbl_users
 // @Router /api/users/GetUserDetailsByEmail/{email} [get]
 func (ts userService) GetUserDetailsByEmail(ctx *gin.Context) {
-	email := ctx.Query("email")
+	email := ctx.Param("email")
 
 	if _, err := emailaddress.Parse(email); err != nil {
 		ResponBody.ResponseCode = "01"
@@ -122,7 +121,7 @@ func (ts userService) GetUserDetailsByEmail(ctx *gin.Context) {
 
 	if _, err := emailaddress.Parse(email); err != nil {
 		ResponBody.ResponseCode = "01"
-		ResponBody.ResponseMessage = "Invalid email address supplied."
+		ResponBody.ResponseMessage = "Invalid email address supplied." + email
 		ctx.JSON(http.StatusBadRequest, ResponBody)
 		return
 	}
@@ -161,7 +160,6 @@ func GetUserDetailsByUsername(ctx *gin.Context) models.Tbl_users {
 // @Success 200 {object} models.UserOut
 // @Router /api/users/Login [post]
 func (ts userService) Login(ctx *gin.Context) {
-	//func (ts userService) LoginUSer(ctx *gin.Context) {
 	requestBody := models.LoginIn{}
 	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
 		util.LogError(err)
@@ -193,12 +191,12 @@ var ResponBody = models.ResponseMessage{}
 // @Router /api/users/CheckEmailWithAuthCode/{email}/{authcode}  [get]
 func (ts userService) CheckEmailWithAuthCode(ctx *gin.Context) {
 	reponseUser := models.Tbl_users{}
-	email := ctx.Query("email")
-	authcode := ctx.Query("authcode")
-
+	email := ctx.Param("email")
+	authcode := ctx.Param("authcode")
 	if _, err := emailaddress.Parse(email); err != nil {
 		ResponBody.ResponseCode = "01"
 		ResponBody.ResponseMessage = "Invalid email address supplied."
+		fmt.Println(err.Error())
 		ctx.JSON(http.StatusBadRequest, ResponBody)
 		return
 	}
@@ -206,16 +204,38 @@ func (ts userService) CheckEmailWithAuthCode(ctx *gin.Context) {
 	if email == "" || authcode == "" {
 		ctx.JSON(http.StatusBadRequest, "Parameter Email and password is required")
 	}
-	retQuery := ts.DbGorm.Table("Tbl_users").Where("authcode=? and email=?", authcode, strings.ToUpper(email)).Find(&reponseUser).Error
-	if retQuery.Error() != "" {
-		util.LogError(retQuery)
-		log.Fatal(retQuery.Error())
+
+	retQuery := ts.DbGorm.Debug().Table("Tbl_users").Where("authcode=? and email=?", authcode, strings.ToUpper(email)).Find(&reponseUser).Error
+	if retQuery != nil {
+		if retQuery.Error() != "" && retQuery.Error() == "record not found" {
+			ResponBody.ResponseCode = "01"
+			ResponBody.ResponseMessage = "Invalid email or authentication code supplied."
+			fmt.Println(retQuery.Error())
+			ctx.JSON(http.StatusBadRequest, ResponBody)
+			return
+		}
+
+		if retQuery.Error() != "" && retQuery.Error() != "record not found" {
+			ResponBody.ResponseCode = "01"
+			ResponBody.ResponseMessage = retQuery.Error()
+			fmt.Println(retQuery.Error())
+			ctx.JSON(http.StatusBadRequest, ResponBody)
+			return
+		}
 	}
+
 	respoReq := newuserService.CheckEmailWithAuthCode(strings.ToUpper(email), strings.ToUpper(authcode))
 
 	if respoReq.Username != "" {
-		ResponBody.ResponseCode = "00"
-		ResponBody.ResponseMessage = "Authentication was successful"
-		ctx.JSON(http.StatusOK, ResponBody)
+		//change profile status
+		if newuserService.UpdateUserStatusUponAuthCode(strings.ToUpper(email), strings.ToUpper(authcode), 2) {
+			ResponBody.ResponseCode = "00"
+			ResponBody.ResponseMessage = "Authentication was successful"
+			ctx.JSON(http.StatusOK, ResponBody)
+			return
+		}
+		ResponBody.ResponseCode = "01"
+		ResponBody.ResponseMessage = "Authentication was not successful, kindly try again later."
+		ctx.JSON(http.StatusBadRequest, ResponBody)
 	}
 }

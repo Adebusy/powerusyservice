@@ -2,21 +2,21 @@ package models
 
 import "time"
 
-type tbl_status struct {
-	Id        int
-	Name      string
-	IsDeleted bool
-	DateAdded time.Time
+type Tbl_status struct {
+	Id        int       `json:"Id" validate:"omitempty"`
+	Name      string    `json:"Name" validate:"omitempty"`
+	IsDeleted bool      `json:"IsDeleted" validate:"omitempty"`
+	Dateadded time.Time `json:"Dateadded" validate:"omitempty"`
 }
 
-type statusIn struct {
-	Name      string
-	IsDeleted bool
+type StatusIn struct {
+	Name      string `json:"Name" validate:"omitempty"`
+	IsDeleted bool   `json:"IsDeleted" validate:"omitempty"`
 }
 
-type statusOut struct {
-	Id        int
-	Name      string
-	IsDeleted bool
-	DateAdded time.Time
+type StatusOut struct {
+	Id        int       `json:"Id" validate:"omitempty"`
+	Name      string    `json:"Name" validate:"omitempty"`
+	IsDeleted bool      `json:"IsDeleted" validate:"omitempty"`
+	Dateadded time.Time `json:"Dateadded" validate:"omitempty"`
 }

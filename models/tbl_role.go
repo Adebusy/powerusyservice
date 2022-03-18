@@ -2,23 +2,23 @@ package models
 
 import "time"
 
-type tbl_role struct {
-	Id          int
-	Code        string
-	Name        string
-	DateCreated time.Time
-	Status      bool
+type Tbl_role struct {
+	Id          int       `json:"id" validate:"omitempty"`
+	Code        string    `json:"Code" validate:"omitempty"`
+	Name        string    `json:"Name" validate:"omitempty"`
+	Datecreated time.Time `json:"Datecreated" validate:"omitempty"`
+	Status      bool      `json:"Status" validate:"omitempty"`
 }
 
-type roleIn struct {
-	Name   string
-	Status bool
+type RoleIn struct {
+	Code string `json:"Code" validate:"omitempty"`
+	Name string `json:"Name" validate:"omitempty"`
 }
 
-type roleOut struct {
-	Id          int
-	Code        string
-	Name        string
-	DateCreated time.Time
-	Status      bool
+type RoleOut struct {
+	Id          int       `json:"id" validate:"omitempty"`
+	Code        string    `json:"Code" validate:"omitempty"`
+	Name        string    `json:"Name" validate:"omitempty"`
+	Datecreated time.Time `json:"Datecreated" validate:"omitempty"`
+	Status      bool      `json:"Status" validate:"omitempty"`
 }
