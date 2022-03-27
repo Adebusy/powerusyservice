@@ -49,7 +49,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/company/CompanyRegistration": {
+        "/api/company/ApproveKYC": {
             "post": {
                 "produces": [
                     "application/json"
@@ -57,15 +57,15 @@ const docTemplate = `{
                 "tags": [
                     "company"
                 ],
-                "summary": "Register new company",
+                "summary": "Approve KYC document.",
                 "parameters": [
                     {
-                        "description": "Company details",
-                        "name": "user",
+                        "description": "KYC approval",
+                        "name": "KYC",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.CompanyDetailsIn"
+                            "$ref": "#/definitions/models.KYCApprovalIn"
                         }
                     }
                 ],
@@ -79,7 +79,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/company/GetComplaintByRefID/{Email}/{CompanyName}": {
+        "/api/company/GetAllKYC": {
             "get": {
                 "produces": [
                     "application/json"
@@ -87,7 +87,29 @@ const docTemplate = `{
                 "tags": [
                     "company"
                 ],
-                "summary": "Gets company details bycompany name.",
+                "summary": "Gets all companies KYC details.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.KYCsOut"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/company/GetCompanyByCompanyName/{CompanyName}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company"
+                ],
+                "summary": "Gets company details by company name.",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -98,7 +120,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/company/GetComplaintByRefID/{email}/{companyname}": {
+        "/api/company/GetCompanyDetailByEmailandCompName/{email}/{companyname}": {
             "get": {
                 "produces": [
                     "application/json"
@@ -117,6 +139,55 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/company/GetKYCbyCompanyId/{Id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company"
+                ],
+                "summary": "Gets company KYC details by company Id.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.KYCOut"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/company/RegisterCompany": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company"
+                ],
+                "summary": "Register new company",
+                "parameters": [
+                    {
+                        "description": "Company details",
+                        "name": "company",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CompanyDetailsIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseMessage"
+                        }
+                    }
+                }
+            }
+        },
         "/api/company/UploadCompanyDocuments": {
             "post": {
                 "produces": [
@@ -129,11 +200,145 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Upload company document",
-                        "name": "user",
+                        "name": "CompanyDoc",
                         "in": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/models.ImportationDocumentIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/company/UploadKYC": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company"
+                ],
+                "summary": "Upload KYC document.",
+                "parameters": [
+                    {
+                        "description": "KYC document",
+                        "name": "KYC",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.KYCIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/shippers/ApproveShippersDocument": {
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shipper"
+                ],
+                "summary": "Approve shippers document",
+                "parameters": [
+                    {
+                        "description": "User Details",
+                        "name": "shipperDoc",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ShipperApprovalReqIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ResponseMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/shippers/GetAllShippersDocument": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shipper"
+                ],
+                "summary": "Gets all shippers document",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ShipperOut"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/shippers/GetShippersDocumentByCompanyname/{comapanyname}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shipper"
+                ],
+                "summary": "Gets shipper's document by company name",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ShipperOut"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/shippers/UploadShippersDocument": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shipper"
+                ],
+                "summary": "Upload shippers document",
+                "parameters": [
+                    {
+                        "description": "User Details",
+                        "name": "shipperDoc",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ShipperIn"
                         }
                     }
                 ],
@@ -419,6 +624,149 @@ const docTemplate = `{
                 }
             }
         },
+        "models.KYCApprovalIn": {
+            "type": "object",
+            "properties": {
+                "Approvalcomment": {
+                    "type": "string"
+                },
+                "Approvedby": {
+                    "type": "integer"
+                },
+                "Registeredid": {
+                    "type": "integer"
+                },
+                "Status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.KYCIn": {
+            "type": "object",
+            "properties": {
+                "Articlesofassociation": {
+                    "type": "string"
+                },
+                "Auditedfinancialstatement": {
+                    "type": "string"
+                },
+                "Certificateofincorporation": {
+                    "type": "string"
+                },
+                "Memorandomofassociation": {
+                    "type": "string"
+                },
+                "Powerofattorneygranted": {
+                    "type": "string"
+                },
+                "Registeredid": {
+                    "type": "integer"
+                },
+                "Taxclearancecertificate": {
+                    "type": "string"
+                },
+                "Validbusinesslicense": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.KYCOut": {
+            "type": "object",
+            "properties": {
+                "Approvalcomment": {
+                    "type": "string"
+                },
+                "Approvedby": {
+                    "type": "integer"
+                },
+                "Articlesofassociation": {
+                    "type": "string"
+                },
+                "Auditedfinancialstatement": {
+                    "type": "string"
+                },
+                "Certificateofincorporation": {
+                    "type": "string"
+                },
+                "Dateadded": {
+                    "type": "string"
+                },
+                "Dateapproved": {
+                    "type": "string"
+                },
+                "Memorandomofassociation": {
+                    "type": "string"
+                },
+                "Powerofattorneygranted": {
+                    "type": "string"
+                },
+                "Registeredid": {
+                    "type": "integer"
+                },
+                "Statusid": {
+                    "type": "integer"
+                },
+                "Taxclearancecertificate": {
+                    "type": "string"
+                },
+                "Validbusinesslicense": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.KYCsOut": {
+            "type": "object",
+            "properties": {
+                "Approvalcomment": {
+                    "type": "string"
+                },
+                "Approvedby": {
+                    "type": "integer"
+                },
+                "Articlesofassociation": {
+                    "type": "string"
+                },
+                "Auditedfinancialstatement": {
+                    "type": "string"
+                },
+                "Certificateofincorporation": {
+                    "type": "string"
+                },
+                "Companyname": {
+                    "type": "string"
+                },
+                "Dateadded": {
+                    "type": "string"
+                },
+                "Dateapproved": {
+                    "type": "string"
+                },
+                "Memorandomofassociation": {
+                    "type": "string"
+                },
+                "Powerofattorneygranted": {
+                    "type": "string"
+                },
+                "Registeredid": {
+                    "type": "integer"
+                },
+                "Statusid": {
+                    "type": "integer"
+                },
+                "Taxclearancecertificate": {
+                    "type": "string"
+                },
+                "Validbusinesslicense": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.LoginIn": {
             "type": "object",
             "properties": {
@@ -437,6 +785,84 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "responseMessage": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ShipperApprovalReqIn": {
+            "type": "object",
+            "properties": {
+                "ApprovedBy": {
+                    "type": "integer"
+                },
+                "Comment": {
+                    "type": "string"
+                },
+                "CompanyName": {
+                    "type": "string"
+                },
+                "Statusid": {
+                    "type": "integer"
+                },
+                "UserId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.ShipperIn": {
+            "type": "object",
+            "properties": {
+                "CompanyName": {
+                    "type": "string"
+                },
+                "Location": {
+                    "type": "string"
+                },
+                "Phonenumber": {
+                    "type": "string"
+                },
+                "UserId": {
+                    "type": "integer"
+                },
+                "tin": {
+                    "type": "string"
+                },
+                "tinpassword": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ShipperOut": {
+            "type": "object",
+            "properties": {
+                "ApprovedBy": {
+                    "type": "integer"
+                },
+                "Comment": {
+                    "type": "string"
+                },
+                "CompanyName": {
+                    "type": "string"
+                },
+                "Location": {
+                    "type": "string"
+                },
+                "Phonenumber": {
+                    "type": "string"
+                },
+                "Statusid": {
+                    "type": "string"
+                },
+                "UserId": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "tin": {
+                    "type": "string"
+                },
+                "tinpassword": {
                     "type": "string"
                 }
             }
@@ -502,6 +928,9 @@ const docTemplate = `{
                 },
                 "Phonenumber": {
                     "type": "string"
+                },
+                "Roleid": {
+                    "type": "integer"
                 },
                 "Username": {
                     "type": "string"

@@ -81,6 +81,100 @@ definitions:
       ImportationId:
         type: string
     type: object
+  models.KYCApprovalIn:
+    properties:
+      Approvalcomment:
+        type: string
+      Approvedby:
+        type: integer
+      Registeredid:
+        type: integer
+      Status:
+        type: integer
+    type: object
+  models.KYCIn:
+    properties:
+      Articlesofassociation:
+        type: string
+      Auditedfinancialstatement:
+        type: string
+      Certificateofincorporation:
+        type: string
+      Memorandomofassociation:
+        type: string
+      Powerofattorneygranted:
+        type: string
+      Registeredid:
+        type: integer
+      Taxclearancecertificate:
+        type: string
+      Validbusinesslicense:
+        type: string
+    type: object
+  models.KYCOut:
+    properties:
+      Approvalcomment:
+        type: string
+      Approvedby:
+        type: integer
+      Articlesofassociation:
+        type: string
+      Auditedfinancialstatement:
+        type: string
+      Certificateofincorporation:
+        type: string
+      Dateadded:
+        type: string
+      Dateapproved:
+        type: string
+      Memorandomofassociation:
+        type: string
+      Powerofattorneygranted:
+        type: string
+      Registeredid:
+        type: integer
+      Statusid:
+        type: integer
+      Taxclearancecertificate:
+        type: string
+      Validbusinesslicense:
+        type: string
+      id:
+        type: integer
+    type: object
+  models.KYCsOut:
+    properties:
+      Approvalcomment:
+        type: string
+      Approvedby:
+        type: integer
+      Articlesofassociation:
+        type: string
+      Auditedfinancialstatement:
+        type: string
+      Certificateofincorporation:
+        type: string
+      Companyname:
+        type: string
+      Dateadded:
+        type: string
+      Dateapproved:
+        type: string
+      Memorandomofassociation:
+        type: string
+      Powerofattorneygranted:
+        type: string
+      Registeredid:
+        type: integer
+      Statusid:
+        type: integer
+      Taxclearancecertificate:
+        type: string
+      Validbusinesslicense:
+        type: string
+      id:
+        type: integer
+    type: object
   models.LoginIn:
     properties:
       Password:
@@ -93,6 +187,57 @@ definitions:
       responseCode:
         type: string
       responseMessage:
+        type: string
+    type: object
+  models.ShipperApprovalReqIn:
+    properties:
+      ApprovedBy:
+        type: integer
+      Comment:
+        type: string
+      CompanyName:
+        type: string
+      Statusid:
+        type: integer
+      UserId:
+        type: integer
+    type: object
+  models.ShipperIn:
+    properties:
+      CompanyName:
+        type: string
+      Location:
+        type: string
+      Phonenumber:
+        type: string
+      UserId:
+        type: integer
+      tin:
+        type: string
+      tinpassword:
+        type: string
+    type: object
+  models.ShipperOut:
+    properties:
+      ApprovedBy:
+        type: integer
+      Comment:
+        type: string
+      CompanyName:
+        type: string
+      Location:
+        type: string
+      Phonenumber:
+        type: string
+      Statusid:
+        type: string
+      UserId:
+        type: integer
+      id:
+        type: integer
+      tin:
+        type: string
+      tinpassword:
         type: string
     type: object
   models.Tbl_users:
@@ -136,6 +281,8 @@ definitions:
         type: string
       Phonenumber:
         type: string
+      Roleid:
+        type: integer
       Username:
         type: string
     type: object
@@ -204,12 +351,81 @@ paths:
       summary: Shows the new status of server.
       tags:
       - root
-  /api/company/CompanyRegistration:
+  /api/company/ApproveKYC:
+    post:
+      parameters:
+      - description: KYC approval
+        in: body
+        name: KYC
+        required: true
+        schema:
+          $ref: '#/definitions/models.KYCApprovalIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Approve KYC document.
+      tags:
+      - company
+  /api/company/GetAllKYC:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.KYCsOut'
+            type: array
+      summary: Gets all companies KYC details.
+      tags:
+      - company
+  /api/company/GetCompanyByCompanyName/{CompanyName}:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CompanyDetailsOut'
+      summary: Gets company details by company name.
+      tags:
+      - company
+  /api/company/GetCompanyDetailByEmailandCompName/{email}/{companyname}:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CompanyDetailsOut'
+      summary: Gets company details by email address and company name.
+      tags:
+      - company
+  /api/company/GetKYCbyCompanyId/{Id}:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KYCOut'
+      summary: Gets company KYC details by company Id.
+      tags:
+      - company
+  /api/company/RegisterCompany:
     post:
       parameters:
       - description: Company details
         in: body
-        name: user
+        name: company
         required: true
         schema:
           $ref: '#/definitions/models.CompanyDetailsIn'
@@ -223,36 +439,12 @@ paths:
       summary: Register new company
       tags:
       - company
-  /api/company/GetComplaintByRefID/{Email}/{CompanyName}:
-    get:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.CompanyDetailsOut'
-      summary: Gets company details bycompany name.
-      tags:
-      - company
-  /api/company/GetComplaintByRefID/{email}/{companyname}:
-    get:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.CompanyDetailsOut'
-      summary: Gets company details by email address and company name.
-      tags:
-      - company
   /api/company/UploadCompanyDocuments:
     post:
       parameters:
       - description: Upload company document
         in: body
-        name: user
+        name: CompanyDoc
         required: true
         schema:
           $ref: '#/definitions/models.ImportationDocumentIn'
@@ -266,6 +458,91 @@ paths:
       summary: Upload company document
       tags:
       - company
+  /api/company/UploadKYC:
+    post:
+      parameters:
+      - description: KYC document
+        in: body
+        name: KYC
+        required: true
+        schema:
+          $ref: '#/definitions/models.KYCIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Upload KYC document.
+      tags:
+      - company
+  /api/shippers/ApproveShippersDocument:
+    patch:
+      parameters:
+      - description: User Details
+        in: body
+        name: shipperDoc
+        required: true
+        schema:
+          $ref: '#/definitions/models.ShipperApprovalReqIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Approve shippers document
+      tags:
+      - shipper
+  /api/shippers/GetAllShippersDocument:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ShipperOut'
+            type: array
+      summary: Gets all shippers document
+      tags:
+      - shipper
+  /api/shippers/GetShippersDocumentByCompanyname/{comapanyname}:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ShipperOut'
+            type: array
+      summary: Gets shipper's document by company name
+      tags:
+      - shipper
+  /api/shippers/UploadShippersDocument:
+    post:
+      parameters:
+      - description: User Details
+        in: body
+        name: shipperDoc
+        required: true
+        schema:
+          $ref: '#/definitions/models.ShipperIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseMessage'
+      summary: Upload shippers document
+      tags:
+      - shipper
   /api/users/CheckEmailWithAuthCode/{email}/{authcode}:
     get:
       produces:

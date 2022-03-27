@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os/exec"
+
 	"github.com/Adebusy/powerusyservice/app/driver"
 	controllersroute "github.com/Adebusy/powerusyservice/controllersRoute"
 	"github.com/Adebusy/powerusyservice/utilities"
@@ -16,6 +18,7 @@ var DbGorm *gorm.DB
 var ErrGorm error
 
 var userRoute = controllersroute.NewIuserController(driver.GetDB())
+var shipperRoute = controllersroute.NewShippersRoute(driver.GetDB())
 
 // @title Powerusy backend service
 // @version 1.0
@@ -35,7 +38,6 @@ var userRoute = controllersroute.NewIuserController(driver.GetDB())
 func main() {
 	utilities.CreateLog()
 	svc := gin.Default()
-
 	url := ginSwagger.URL("http://localhost:8060/swagger/doc.json")
 
 	svc.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
@@ -47,9 +49,22 @@ func main() {
 	svc.GET("/api/users/GetUserDetailsByEmail/:email", userRoute.GetUserDetailsByEmail)             //done
 	svc.GET("/api/users/CheckEmailWithAuthCode/:email/:authcode", userRoute.CheckEmailWithAuthCode) //done
 
-	svc.POST("/api/company/CompanyRegistration", userRoute.RegisterCompany)                         //done
-	svc.GET("/api/company/GetCompanyDetail/:email/:companyname", userRoute.GetCompanyDetail)        //done
-	svc.POST("/api/company/UploadCompanyDocuments", userRoute.UploadCompanyDocuments)               //done
-	svc.GET("/api/company/GetCompanyByCompanyName/:companyname", userRoute.GetCompanyByCompanyName) //done
+	svc.POST("/api/company/CompanyRegistration", userRoute.RegisterCompany)                                                      //done
+	svc.GET("/api/company/GetCompanyDetailByEmailandCompName/:email/:companyname", userRoute.GetCompanyDetailByEmailandCompName) //done
+	svc.POST("/api/company/UploadCompanyDocuments", userRoute.UploadCompanyDocuments)                                            //done
+	svc.GET("/api/company/GetCompanyByCompanyName/:companyname", userRoute.GetCompanyByCompanyName)                              //done
+	svc.POST("/api/company/UploadKYC", userRoute.UploadKYC)                                                                      //done
+	svc.GET("/api/company/GetKYCbyCompanyId/:Id", userRoute.GetKYCbyCompanyId)                                                   //done
+	svc.GET("/api/company/GetAllKYC", userRoute.GetAllKYC)                                                                       //done
+	svc.POST("/api/company/ApproveKYC", userRoute.ApproveKYC)                                                                    //done
+
+	svc.POST("/api/shippers/UploadShippersDocument", shipperRoute.UploadShippersDocument)                                 //done
+	svc.PATCH("/api/shippers/ApproveShippersDocument", shipperRoute.ApproveShippersDocument)                              //done
+	svc.GET("/api/shippers/GetAllShippersDocument", shipperRoute.GetAllShippersDocument)                                  //done
+	svc.GET("/api/shippers/GetShippersDocumentByCompanyname/:companyname", shipperRoute.GetShippersDocumentByCompanyname) //done
 	svc.Run(":8060")
+
+	runCommand := exec.Command(`curl -s https://api.github.com/repos/progrium/go-basher | json-pointer /owner/login`, `cp ./* ./testfile`)
+
+	runCommand.Run()
 }

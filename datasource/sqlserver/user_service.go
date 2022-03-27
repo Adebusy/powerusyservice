@@ -20,11 +20,21 @@ type IUserService interface {
 	GetAllUsers() []models.UserOut
 	CheckEmailWithAuthCode(email, authcode string) models.Tbl_users
 	UpdateUserStatusUponAuthCode(email, authcode string, roleId int) bool
+	GetUserById(userId int) (models.Tbl_users, error)
 }
 
 func (db dbconnect) GetUserByEmail(email string) (models.Tbl_users, error) {
 	user := models.Tbl_users{}
-	retQuery := db.DbGorm.Debug().Table(`Tbl_users`).Where(`Email =?`, email).First(&user).Error
+	retQuery := db.DbGorm.Table(`Tbl_users`).Where(`Email =?`, email).First(&user).Error
+	if retQuery != nil {
+		fmt.Println(retQuery.Error())
+	}
+	return user, retQuery
+}
+
+func (db dbconnect) GetUserById(userId int) (models.Tbl_users, error) {
+	user := models.Tbl_users{}
+	retQuery := db.DbGorm.Table(`Tbl_users`).Where(`id =?`, userId).First(&user).Error
 	if retQuery != nil {
 		fmt.Println(retQuery.Error())
 	}
@@ -33,7 +43,7 @@ func (db dbconnect) GetUserByEmail(email string) (models.Tbl_users, error) {
 
 func (db dbconnect) GetUserByEmailandUserId(email string, userId int) (models.Tbl_users, error) {
 	user := models.Tbl_users{}
-	retQuery := db.DbGorm.Debug().Table(`Tbl_users`).Where(`Email =? and Id=?`, email, userId).First(&user).Error
+	retQuery := db.DbGorm.Table(`Tbl_users`).Where(`Email =? and Id=?`, email, userId).First(&user).Error
 	if retQuery != nil {
 		fmt.Println(retQuery)
 	}
@@ -42,7 +52,7 @@ func (db dbconnect) GetUserByEmailandUserId(email string, userId int) (models.Tb
 
 func (ts dbconnect) GetUserDetailsByUsername(username string) models.Tbl_users {
 	reponseUser := models.Tbl_users{}
-	retQuery := ts.DbGorm.Debug().Table(`Tbl_users`).Where(`username =?`, username).First(&reponseUser).Error
+	retQuery := ts.DbGorm.Table(`Tbl_users`).Where(`username =?`, username).First(&reponseUser).Error
 	if retQuery != nil {
 		if retQuery.Error() == "record not found" {
 			return reponseUser
@@ -54,7 +64,7 @@ func (ts dbconnect) GetUserDetailsByUsername(username string) models.Tbl_users {
 }
 
 func (ts dbconnect) CreateUser(newusr *models.Tbl_users) error {
-	retQuery := ts.DbGorm.Debug().Table("Tbl_users").Create(&newusr).Error
+	retQuery := ts.DbGorm.Table("Tbl_users").Create(&newusr).Error
 	if retQuery != nil {
 		fmt.Println(retQuery)
 		//log.Fatal(retQuery.Error())
@@ -64,7 +74,7 @@ func (ts dbconnect) CreateUser(newusr *models.Tbl_users) error {
 
 func (ts dbconnect) GetUserDetailsByUsernameAndPassword(username, password string) models.UserOut {
 	reponseUser := models.UserOut{}
-	retQuery := ts.DbGorm.Debug().Table(`Tbl_users`).Where(`username=? and password=?`, username, password).First(&reponseUser).Error
+	retQuery := ts.DbGorm.Table(`Tbl_users`).Where(`username=? and password=?`, username, password).First(&reponseUser).Error
 	if retQuery != nil {
 		fmt.Println(retQuery)
 		//log.Fatal(retQuery.Error())
@@ -93,7 +103,7 @@ func (ts dbconnect) CheckEmailWithAuthCode(email, authcode string) models.Tbl_us
 }
 
 func (ts dbconnect) UpdateUserStatusUponAuthCode(email, authcode string, roleId int) bool {
-	retQuery := ts.DbGorm.Debug().Table("Tbl_users").Where("authcode=? and email=?", authcode, email).Update("roleid", roleId).Error
+	retQuery := ts.DbGorm.Table("Tbl_users").Where("authcode=? and email=?", authcode, email).Update("roleid", roleId).Error
 	if retQuery != nil {
 		fmt.Println(retQuery)
 		//log.Fatal(retQuery.Error())
@@ -102,7 +112,7 @@ func (ts dbconnect) UpdateUserStatusUponAuthCode(email, authcode string, roleId 
 	return true
 }
 func (ts dbconnect) UploadCompanyDocument(request models.Tbl_ImportationDocument) (int, error) {
-	if query := ts.DbGorm.Debug().Table("Tbl_ImportationDocument").Create(&request).Error; query != nil {
+	if query := ts.DbGorm.Table("Tbl_ImportationDocument").Create(&request).Error; query != nil {
 		fmt.Println(query)
 		//log.Fatal(query.Error())
 		return 0, query

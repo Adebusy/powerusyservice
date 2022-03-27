@@ -55,6 +55,7 @@ type UserIn struct {
 	PhoneNumber string `json:"Phonenumber" validate:"omitempty"`
 	Email       string `json:"Email" validate:"omitempty"`
 	Password    string `json:"Password" validate:"omitempty"`
+	Roleid      int    `json:"Roleid" validate:"omitempty"`
 }
 
 type UserOut struct {

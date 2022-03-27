@@ -20,6 +20,13 @@ func init() {
 	//DbGorm.Debug().DropTableIfExists(&models.Tbl_users{})
 	//DbGorm.Debug().DropTableIfExists(&models.Tbl_Registered{})
 	//DbGorm.Debug().DropTableIfExists(&models.Tbl_ImportationDocument{})
+	//DbGorm.Debug().DropTableIfExists(&models.Tbl_auditlog{})
+	//DbGorm.Debug().DropTableIfExists(&models.Tbl_clearing{})
+	//DbGorm.Debug().DropTableIfExists(&models.Tbl_goodstype{})
+	//DbGorm.Debug().DropTableIfExists(&models.Tbl_importation{})
+	//DbGorm.Debug().DropTableIfExists(&models.Tbl_servicetype{})
+	//DbGorm.Debug().DropTableIfExists(&models.Tbl_subgoodstype{})
+
 	DbGorm.SingularTable(true)
 	//DbGorm.Debug().AutoMigrate(&models.Tbl_users{})
 	//DbGorm.Debug().AutoMigrate(&models.Tbl_Registered{})
@@ -27,6 +34,14 @@ func init() {
 	//DbGorm.Debug().AutoMigrate(&models.Tbl_KYC{})
 	//DbGorm.Debug().AutoMigrate(&models.Tbl_role{})
 	//DbGorm.Debug().AutoMigrate(&models.Tbl_status{})
+
+	// DbGorm.Debug().AutoMigrate(&models.Tbl_auditlog{})
+	// DbGorm.Debug().AutoMigrate(&models.Tbl_clearing{})
+	// DbGorm.Debug().AutoMigrate(&models.Tbl_goodstype{})
+	// DbGorm.Debug().AutoMigrate(&models.Tbl_importation{})
+	// DbGorm.Debug().AutoMigrate(&models.Tbl_servicetype{})
+	// DbGorm.Debug().AutoMigrate(&models.Tbl_shipper{})
+	// DbGorm.Debug().AutoMigrate(&models.Tbl_subgoodstype{})
 
 	if ErrGorm != nil {
 		fmt.Printf(ErrGorm.Error())

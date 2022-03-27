@@ -50,7 +50,7 @@ func (ts userService) CreateNewUser(ctx *gin.Context) {
 	newusr.Middlename = strings.ToUpper(userObj.MiddleName)
 	newusr.Password = userObj.Password
 	newusr.Phonenumber = userObj.PhoneNumber
-	newusr.Roleid = 1
+	newusr.Roleid = userObj.Roleid
 	newusr.Status = true
 	newusr.Username = strings.ToUpper(userObj.Username)
 	currentTimeUTC := time.Now().UTC()
@@ -152,7 +152,7 @@ func GetUserDetailsByUsername(ctx *gin.Context) models.Tbl_users {
 	return retQuery
 }
 
-// LoginUSer godoc
+// Login godoc
 // @Summary log user into the syste
 // @Produce json
 // @Tags user
