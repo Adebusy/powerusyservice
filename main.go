@@ -39,7 +39,7 @@ func main() {
 	utilities.CreateLog()
 	svc := gin.Default()
 	url := ginSwagger.URL("http://localhost:8060/swagger/doc.json")
-
+	//update test
 	svc.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
 	svc.GET("/", userRoute.CheckService)                                                            //done
