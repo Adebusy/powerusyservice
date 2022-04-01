@@ -36,7 +36,8 @@ var shipperRoute = controllersroute.NewShippersRoute(driver.GetDB())
 func main() {
 	utilities.CreateLog()
 	svc := gin.Default()
-	url := ginSwagger.URL("http://localhost:8060/swagger/doc.json")
+	url := ginSwagger.URL("https://powerusyservice-qn44i.ondigitalocean.app/swagger/doc.json")
+	//url := ginSwagger.URL("http://localhost:8060/swagger/doc.json")
 	//update test
 	svc.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
