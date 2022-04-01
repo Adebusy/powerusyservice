@@ -321,7 +321,7 @@ definitions:
       username:
         type: string
     type: object
-host: localhost:8060
+host: https://powerusyservice-qn44i.ondigitalocean.app
 info:
   contact:
     email: alao.adebusy@gmail.com, nabbo247@yahoo.com

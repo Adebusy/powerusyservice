@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os/exec"
-
 	"github.com/Adebusy/powerusyservice/app/driver"
 	controllersroute "github.com/Adebusy/powerusyservice/controllersRoute"
 	"github.com/Adebusy/powerusyservice/utilities"
@@ -64,7 +62,7 @@ func main() {
 	svc.GET("/api/shippers/GetShippersDocumentByCompanyname/:companyname", shipperRoute.GetShippersDocumentByCompanyname) //done
 	svc.Run(":8060")
 
-	runCommand := exec.Command(`curl -s https://api.github.com/repos/progrium/go-basher | json-pointer /owner/login`, `cp ./* ./testfile`)
+	//runCommand := exec.Command(`curl -s https://api.github.com/repos/progrium/go-basher | json-pointer /owner/login`, `cp ./* ./testfile`)
 
-	runCommand.Run()
+	//runCommand.Run()
 }
