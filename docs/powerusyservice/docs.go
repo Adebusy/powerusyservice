@@ -998,7 +998,7 @@ var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "powerusyservice-qn44i.ondigitalocean.app",
 	BasePath:         "/",
-	Schemes:          []string{"http"},
+	Schemes:          []string{"https"},
 	Title:            "Powerusy backend service",
 	Description:      "This is a backend web service created for Powerusy operations.",
 	InfoInstanceName: "swagger",
