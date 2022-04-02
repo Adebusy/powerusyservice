@@ -29,7 +29,7 @@ var shipperRoute = controllersroute.NewShippersRoute(driver.GetDB())
 // @license.name AddyTech Solution Ltd
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host localhost:8060
+// @host https://powerusyservice-qn44i.ondigitalocean.app
 // @BasePath /
 // @schemes http
 func main() {
