@@ -996,7 +996,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "https://powerusyservice-qn44i.ondigitalocean.app",
+	Host:             "powerusyservice-qn44i.ondigitalocean.app",
 	BasePath:         "/",
 	Schemes:          []string{"http"},
 	Title:            "Powerusy backend service",
