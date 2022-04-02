@@ -40,7 +40,7 @@ func main() {
 	svc.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
 	svc.GET("/", userRoute.CheckService)                                                            //done
-	svc.POST("/api/users/createUser", userRoute.CreateNewUser)                                      //done
+	svc.POST("/api/users/CreateNewUser", userRoute.CreateNewUser)                                   //done
 	svc.POST("/api/users/Login", userRoute.Login)                                                   //done
 	svc.GET("/api/users/GetAllUsers", userRoute.GetAllUsers)                                        //done
 	svc.GET("/api/users/GetUserDetailsByEmail/:email", userRoute.GetUserDetailsByEmail)             //done
