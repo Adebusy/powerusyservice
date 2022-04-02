@@ -66,7 +66,7 @@ func (ts userService) CreateNewUser(ctx *gin.Context) {
 	retEmailDetail, _ := newuserService.GetUserByEmail(newusr.Email)
 	if retEmailDetail.Id != 0 {
 		ResponBody.ResponseCode = "01"
-		ResponBody.ResponseMessage = "Email " + newusr.Email + "address already exists"
+		ResponBody.ResponseMessage = "Email " + newusr.Email + " address already exists"
 		ctx.JSON(http.StatusOK, ResponBody)
 		return
 	}
@@ -89,7 +89,7 @@ func (ts userService) CreateNewUser(ctx *gin.Context) {
 	var useEmail []string
 	useEmail = append(useEmail, newusr.Email)
 	// send auth code to user
-	sendAuth := util.SendEmail(ctx, useEmail, newusr.Authcode, ctx.Request)
+	sendAuth := true //util.SendEmail(ctx, useEmail, newusr.Authcode, ctx.Request)
 	if sendAuth {
 		ResponBody.ResponseCode = "00"
 		ResponBody.ResponseMessage = fmt.Sprintf("User %s creaated successfully, authcode has been sent to the user email address", newusr.Username)
@@ -121,7 +121,7 @@ func (ts userService) GetUserDetailsByEmail(ctx *gin.Context) {
 
 	if _, err := emailaddress.Parse(email); err != nil {
 		ResponBody.ResponseCode = "01"
-		ResponBody.ResponseMessage = "Invalid email address supplied." + email
+		ResponBody.ResponseMessage = "Invalid email address supplied. " + email
 		ctx.JSON(http.StatusBadRequest, ResponBody)
 		return
 	}

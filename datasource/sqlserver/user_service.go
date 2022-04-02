@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/Adebusy/powerusyservice/models"
+	ut "github.com/Adebusy/powerusyservice/utilities"
 	"github.com/jinzhu/gorm"
 )
 
@@ -27,7 +28,7 @@ func (db dbconnect) GetUserByEmail(email string) (models.Tbl_users, error) {
 	user := models.Tbl_users{}
 	retQuery := db.DbGorm.Table(`Tbl_users`).Where(`Email =?`, email).First(&user).Error
 	if retQuery != nil {
-		fmt.Println(retQuery.Error())
+		ut.LogError(retQuery)
 	}
 	return user, retQuery
 }
@@ -36,7 +37,7 @@ func (db dbconnect) GetUserById(userId int) (models.Tbl_users, error) {
 	user := models.Tbl_users{}
 	retQuery := db.DbGorm.Table(`Tbl_users`).Where(`id =?`, userId).First(&user).Error
 	if retQuery != nil {
-		fmt.Println(retQuery.Error())
+		ut.LogError(retQuery)
 	}
 	return user, retQuery
 }
@@ -45,7 +46,7 @@ func (db dbconnect) GetUserByEmailandUserId(email string, userId int) (models.Tb
 	user := models.Tbl_users{}
 	retQuery := db.DbGorm.Table(`Tbl_users`).Where(`Email =? and Id=?`, email, userId).First(&user).Error
 	if retQuery != nil {
-		fmt.Println(retQuery)
+		ut.LogError(retQuery)
 	}
 	return user, retQuery
 }
@@ -58,7 +59,6 @@ func (ts dbconnect) GetUserDetailsByUsername(username string) models.Tbl_users {
 			return reponseUser
 		}
 		fmt.Println(retQuery)
-		//log.Fatal(retQuery.Error())
 	}
 	return reponseUser
 }
@@ -66,8 +66,7 @@ func (ts dbconnect) GetUserDetailsByUsername(username string) models.Tbl_users {
 func (ts dbconnect) CreateUser(newusr *models.Tbl_users) error {
 	retQuery := ts.DbGorm.Table("Tbl_users").Create(&newusr).Error
 	if retQuery != nil {
-		fmt.Println(retQuery)
-		//log.Fatal(retQuery.Error())
+		ut.LogError(retQuery)
 	}
 	return retQuery
 }
@@ -76,8 +75,7 @@ func (ts dbconnect) GetUserDetailsByUsernameAndPassword(username, password strin
 	reponseUser := models.UserOut{}
 	retQuery := ts.DbGorm.Table(`Tbl_users`).Where(`username=? and password=?`, username, password).First(&reponseUser).Error
 	if retQuery != nil {
-		fmt.Println(retQuery)
-		//log.Fatal(retQuery.Error())
+		ut.LogError(retQuery)
 	}
 	return reponseUser
 }
@@ -86,8 +84,7 @@ func (ts dbconnect) GetAllUsers() []models.UserOut {
 	users := []models.UserOut{}
 	retQuery := ts.DbGorm.Table(`Tbl_users`).Find(&users).Error
 	if retQuery != nil {
-		fmt.Println(retQuery)
-		//log.Fatal(retQuery.Error())
+		ut.LogError(retQuery)
 	}
 	return users
 }
@@ -96,8 +93,8 @@ func (ts dbconnect) CheckEmailWithAuthCode(email, authcode string) models.Tbl_us
 	user := models.Tbl_users{}
 	retQuery := ts.DbGorm.Table("Tbl_users").Where("authcode=? and email=?", authcode, email).Find(&user).Error
 	if retQuery != nil {
-		fmt.Println(retQuery)
-		//log.Fatal(retQuery.Error())
+		ut.LogError(retQuery)
+
 	}
 	return user
 }
@@ -105,16 +102,14 @@ func (ts dbconnect) CheckEmailWithAuthCode(email, authcode string) models.Tbl_us
 func (ts dbconnect) UpdateUserStatusUponAuthCode(email, authcode string, roleId int) bool {
 	retQuery := ts.DbGorm.Table("Tbl_users").Where("authcode=? and email=?", authcode, email).Update("roleid", roleId).Error
 	if retQuery != nil {
-		fmt.Println(retQuery)
-		//log.Fatal(retQuery.Error())
+		ut.LogError(retQuery)
 		return false
 	}
 	return true
 }
 func (ts dbconnect) UploadCompanyDocument(request models.Tbl_ImportationDocument) (int, error) {
 	if query := ts.DbGorm.Table("Tbl_ImportationDocument").Create(&request).Error; query != nil {
-		fmt.Println(query)
-		//log.Fatal(query.Error())
+		ut.LogError(query)
 		return 0, query
 	}
 	return 1, nil

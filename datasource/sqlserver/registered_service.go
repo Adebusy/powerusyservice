@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/Adebusy/powerusyservice/models"
+	ut "github.com/Adebusy/powerusyservice/utilities"
 	"github.com/jinzhu/gorm"
 )
 
@@ -27,7 +28,7 @@ type IRegistered interface {
 func (db dbconnect) GetCompanyByCompanyName(CompanyName string) models.CompanyDetailsOut {
 	registered := models.CompanyDetailsOut{}
 	if retQuery := db.DbGorm.Debug().Table(`Tbl_Registered`).Where(`CompanyName=?`, strings.ToUpper(CompanyName)).Find(&registered).Error; retQuery != nil {
-		fmt.Println(retQuery.Error())
+		ut.LogError(retQuery)
 	}
 	return registered
 }
@@ -49,7 +50,7 @@ func (db dbconnect) GetCompanyByCompanyId(UserId int) (models.CompanyDetailsOut,
 	fmt.Println(UserId)
 	queryCheck := db.DbGorm.Debug().Table(`Tbl_Registered`).Where(`Id =?`, UserId).First(&company).Error
 	if queryCheck != nil {
-		fmt.Println(queryCheck.Error())
+		ut.LogError(queryCheck)
 	}
 	fmt.Println(company.Serviceid)
 	return company, nil

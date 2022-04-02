@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/Adebusy/powerusyservice/app/driver"
 	controllersroute "github.com/Adebusy/powerusyservice/controllersRoute"
-	"github.com/Adebusy/powerusyservice/utilities"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 
@@ -34,7 +33,6 @@ var shipperRoute = controllersroute.NewShippersRoute(driver.GetDB())
 // @BasePath /
 // @schemes http
 func main() {
-	utilities.CreateLog()
 	svc := gin.Default()
 	url := ginSwagger.URL("https://powerusyservice-qn44i.ondigitalocean.app/swagger/doc.json")
 	//url := ginSwagger.URL("http://localhost:8060/swagger/doc.json")

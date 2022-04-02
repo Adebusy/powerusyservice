@@ -1,11 +1,11 @@
 package sqlserver
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/Adebusy/powerusyservice/app/driver"
 	"github.com/Adebusy/powerusyservice/models"
+	ut "github.com/Adebusy/powerusyservice/utilities"
 	"github.com/jinzhu/gorm"
 )
 
@@ -26,7 +26,7 @@ func (db dbconnect) GetKYCByCompanyId(companyId int) (models.KYCOut, error) {
 	retVal := models.KYCOut{}
 	err := db.DbGorm.Table(`tbl_kyc`).Where(`registeredid=?`, companyId).First(&retVal).Error
 	if err != nil {
-		fmt.Println(err.Error())
+		ut.LogError(err)
 		return retVal, err
 	}
 	return retVal, nil
@@ -44,7 +44,7 @@ func (db dbconnect) GetAllKYC() ([]models.KYCsOut, error) {
 	retVal := []models.KYCsOut{}
 	err := db.DbGorm.Debug().Table(`tbl_kyc`).Find(&retVal).Error
 	if err != nil {
-		fmt.Println(err.Error())
+		ut.LogError(err)
 		return retVal, err
 	}
 	if len(retVal) != 0 {
@@ -59,6 +59,7 @@ func (db dbconnect) GetAllKYC() ([]models.KYCsOut, error) {
 func (db dbconnect) ApproveKYC(KYCApprovalIn models.KYCApprovalIn) (int, error) {
 	doinser := db.DbGorm.Debug().Table(`tbl_kyc`).Where(`registeredid=?`, KYCApprovalIn.Registeredid).Updates(map[string]interface{}{"Approvalcomment": &KYCApprovalIn.Approvalcomment, "statusid": &KYCApprovalIn.Status, "Approvedby": &KYCApprovalIn.Approvedby, "Dateapproved": time.Now()}).Error
 	if doinser != nil {
+		ut.LogError(doinser)
 		return 0, doinser
 	}
 	return 1, nil
